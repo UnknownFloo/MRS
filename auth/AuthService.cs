@@ -31,14 +31,6 @@ namespace MRS.auth
             {
                 await MainClass.Handle404(req, resp, "Route not found");
             }
-
-            byte[] data = System.Text.Encoding.UTF8.GetBytes("AuthService is running");
-            resp.ContentType = "text/html";
-            resp.ContentEncoding = System.Text.Encoding.UTF8;
-            resp.ContentLength64 = data.LongLength;
-
-            await resp.OutputStream.WriteAsync(data);
-
         }
 
     }

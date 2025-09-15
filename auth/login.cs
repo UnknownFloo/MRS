@@ -31,6 +31,7 @@ namespace MRS.auth
                     if (user == null || !user.ContainsKey("username") || !user.ContainsKey("password"))
                     {
                         await MainClass.Handle404(req, resp, "Missing username or password");
+                        return;
                     }
 
                     bool authenticated = Login.Authenticate(user?["username"]?.ToString() ?? "", user?["password"]?.ToString() ?? "");

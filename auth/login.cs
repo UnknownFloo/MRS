@@ -42,6 +42,7 @@ namespace MRS.auth
                     if (authenticated)
                     {
                         byte[] data = System.Text.Encoding.UTF8.GetBytes($"<html><body><h1>Login Successful</h1><p>Welcome, {user?["username"]}!</p></body></html>");
+                        resp.StatusCode = 200;
                         resp.ContentType = "text/html";
                         resp.ContentEncoding = System.Text.Encoding.UTF8;
                         resp.ContentLength64 = data.LongLength;
@@ -49,7 +50,12 @@ namespace MRS.auth
                     }
                     else
                     {
-                        await Error.Handle400(req, resp, "Invalid username or password");
+                        byte[] data = System.Text.Encoding.UTF8.GetBytes($"<html><body><h1>Login Failed</h1><p>Invalid username or password!</p></body></html>");
+                        resp.StatusCode = 200;
+                        resp.ContentType = "text/html";
+                        resp.ContentEncoding = System.Text.Encoding.UTF8;
+                        resp.ContentLength64 = data.LongLength;
+                        await resp.OutputStream.WriteAsync(data);
                     }
 
                 }

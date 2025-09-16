@@ -9,7 +9,7 @@ namespace MRS.Status
             resp.StatusCode = 400;
             resp.ContentType = "text/html";
             resp.ContentEncoding = System.Text.Encoding.UTF8;
-            byte[] data = System.Text.Encoding.UTF8.GetBytes($"<html><body><h1>200 OK</h1><p>{message}</p></body></html>");
+            byte[] data = System.Text.Encoding.UTF8.GetBytes($"<html><body><h1>400 Bad Request</h1><p>{message}</p></body></html>");
             resp.ContentLength64 = data.LongLength;
             await resp.OutputStream.WriteAsync(data);
         }

@@ -1,5 +1,7 @@
 using System.Net;
 
+using MRS.Status;
+
 namespace MRS.auth
 {
     public class AuthService
@@ -19,7 +21,7 @@ namespace MRS.auth
             //Console.WriteLine($"Subpages: {string.Join(", ", subpages)}"); // Debugging Information
             if (subpages == null)
             {
-                await MainClass.Handle404(req, resp, "No subpages found"); // Change to 500 Internal Server Error
+                await Error.Handle500(req, resp, "No subpages found"); 
             }
             var route = (req.HttpMethod, "/" + subpages?[^1] ?? "");
             // Console.WriteLine($"Routing to: {route}"); // Debugging Information
@@ -29,7 +31,7 @@ namespace MRS.auth
             }
             else
             {
-                await MainClass.Handle404(req, resp, "Route not found");
+                await Error.Handle404(req, resp, "Route not found");
             }
         }
 

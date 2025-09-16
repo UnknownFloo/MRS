@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 
 using MRS.auth;
+using MRS.Status;
 
 namespace MRS
 {
@@ -22,16 +23,6 @@ namespace MRS
             { ("POST", "/api/v1/auth/login"), AuthService.handleAuthService },
             { ("GET", "/"), HandleHome }
         };
-
-        public static async Task Handle404(HttpListenerRequest req, HttpListenerResponse resp, string error)
-        {
-            resp.StatusCode = 404;
-            resp.ContentType = "text/html";
-            resp.ContentEncoding = System.Text.Encoding.UTF8;
-            byte[] data = System.Text.Encoding.UTF8.GetBytes($"<html><body><h1>404 Not Found</h1><p>{error}</p></body></html>");
-            resp.ContentLength64 = data.LongLength;
-            await resp.OutputStream.WriteAsync(data);
-        }
 
         public static async Task HandleHome(HttpListenerRequest req, HttpListenerResponse resp)
         {
@@ -63,7 +54,7 @@ namespace MRS
                 }
                 else
                 {
-                    await Handle404(req, resp, "Route not found");
+                    await Error.Handle404(req, resp, "Route not found");
                 }
 
                 resp.Close();

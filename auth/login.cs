@@ -2,6 +2,8 @@ using System.Net;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
+using MRS.Status;
+
 namespace MRS.auth
 {
     public class Login
@@ -17,7 +19,7 @@ namespace MRS.auth
 
             return user != null;
         }
-        
+
         public static async Task handleLogin(HttpListenerRequest req, HttpListenerResponse resp)
         {
             using (var body = req.InputStream) // here we have data
@@ -30,7 +32,7 @@ namespace MRS.auth
 
                     if (user == null || !user.ContainsKey("username") || !user.ContainsKey("password"))
                     {
-                        await MainClass.Handle404(req, resp, "Missing username or password");
+                        await Error.Handle400(req, resp, "Missing username or password");
                         return;
                     }
 
@@ -47,13 +49,13 @@ namespace MRS.auth
                     }
                     else
                     {
-                        await MainClass.Handle404(req, resp, "Invalid username or password");
+                        await Error.Handle400(req, resp, "Invalid username or password");
                     }
 
                 }
                 catch (JsonException ex)
                 {
-                    await MainClass.Handle404(req, resp, "Invalid JSON");
+                    await Error.Handle400(req, resp, "Invalid JSON");
                     Console.WriteLine("Error parsing JSON: " + ex.Message);
                 }
             }

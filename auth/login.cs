@@ -9,9 +9,15 @@ namespace MRS.auth
     public class Login
     {
         private static readonly dynamic[] users = [
-            new { username = "admin", password = "password" },
-            new { username = "user", password = "1234" }
+            new { id = 1 , username = "admin", password = "password" },
+            new { id = 2 , username = "user", password = "1234" }
         ];
+
+        private static int GenerateToken(string userName)
+        {
+            dynamic? user = Array.Find(users, u => u.username == userName);
+            return ((user?.id + user?.username?.ToString().Length) * 420) ?? 0;
+        }
 
         public static bool Authenticate(string username, string password)
         {
@@ -29,6 +35,7 @@ namespace MRS.auth
                 {
                     string json = reader.ReadToEnd();
                     JsonObject? user = System.Text.Json.JsonSerializer.Deserialize<JsonObject>(json);
+                    Console.WriteLine(user);
 
                     if (user == null || !user.ContainsKey("username") || !user.ContainsKey("password"))
                     {
@@ -41,9 +48,19 @@ namespace MRS.auth
 
                     if (authenticated)
                     {
-                        byte[] data = System.Text.Encoding.UTF8.GetBytes($"<html><body><h1>Login Successful</h1><p>Welcome, {user?["username"]}!</p></body></html>");
+                        int generatedToken = GenerateToken(user?["username"]?.ToString() ?? "");
+
+                        if(generatedToken == 0)
+                        {
+                            await Error.Handle500(req, resp, "Token generation failed");
+                            return;
+                        }
+
+                        dynamic responseData = new { message = "Login successful", token = generatedToken.ToString() + "_mrsToken"};
+
+                        byte[] data = System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(responseData));
                         resp.StatusCode = 200;
-                        resp.ContentType = "text/html";
+                        resp.ContentType = "application/json";
                         resp.ContentEncoding = System.Text.Encoding.UTF8;
                         resp.ContentLength64 = data.LongLength;
                         await resp.OutputStream.WriteAsync(data);

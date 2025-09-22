@@ -4,7 +4,9 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 
 using MRS.auth;
+using MRS.db;
 using MRS.Status;
+using MySql.Data.MySqlClient;
 
 namespace MRS
 {
@@ -21,8 +23,19 @@ namespace MRS
         private static readonly Dictionary<(string method, string path), RouteHandler> routes = new()
         {
             { ("POST", "/api/v1/auth/login"), AuthService.handleAuthService },
-            { ("GET", "/"), HandleHome }
+            { ("GET", "/"), HandleHome },
+            { ("GET", "/test"), Test },
         };
+
+        public static async Task Test(HttpListenerRequest req, HttpListenerResponse resp)
+        {
+            
+            byte[] data = System.Text.Encoding.UTF8.GetBytes("Test endpoint reached!");
+            resp.ContentType = "text/html";
+            resp.ContentEncoding = System.Text.Encoding.UTF8;
+            resp.ContentLength64 = data.LongLength;
+            await resp.OutputStream.WriteAsync(data);
+        }
 
         public static async Task HandleHome(HttpListenerRequest req, HttpListenerResponse resp)
         {

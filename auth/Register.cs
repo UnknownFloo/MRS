@@ -30,6 +30,27 @@ namespace MRS.auth
                         return;
                     }
 
+                    var DBManager = new DBManager();
+                    MySqlDataReader dbReader = DBManager.Query(@"SELECT * From users WHERE username = @username", ["@username", user?["username"]?.ToString() ?? ""]);
+
+                    while (dbReader.Read())
+                    {
+                        await Error.Handle400(req, resp, "Username already exists");
+                        return;
+                    }
+
+                    DBManager.CloseConnection();
+
+                    MySqlDataReader insertReader = DBManager.Query(@"INSERT INTO users (username, password) VALUES (@username, @password)", ["@username", user?["username"]?.ToString() ?? "", "@password", user?["password"]?.ToString() ?? ""]);
+
+                    DBManager.CloseConnection();
+                    
+                    byte[] data = System.Text.Encoding.UTF8.GetBytes("User registered successfully");
+                    resp.ContentType = "text/html";
+                    resp.ContentEncoding = System.Text.Encoding.UTF8;
+                    resp.ContentLength64 = data.LongLength;
+                    await resp.OutputStream.WriteAsync(data);
+                    return;
                 }
                 catch (JsonException ex)
                 {

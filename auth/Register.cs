@@ -44,12 +44,9 @@ namespace MRS.auth
                     MySqlDataReader insertReader = DBManager.Query(@"INSERT INTO users (username, password) VALUES (@username, @password)", ["@username", user?["username"]?.ToString() ?? "", "@password", user?["password"]?.ToString() ?? ""]);
 
                     DBManager.CloseConnection();
-                    
-                    byte[] data = System.Text.Encoding.UTF8.GetBytes("User registered successfully");
-                    resp.ContentType = "text/html";
-                    resp.ContentEncoding = System.Text.Encoding.UTF8;
-                    resp.ContentLength64 = data.LongLength;
-                    await resp.OutputStream.WriteAsync(data);
+
+                    await Success.Handle200(req, resp, JsonSerializer.Serialize(new { message = "User registered successfully" }));
+
                     return;
                 }
                 catch (JsonException ex)

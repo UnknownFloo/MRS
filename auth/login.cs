@@ -49,7 +49,7 @@ namespace MRS.auth
                         token = authenticated ? $"{user?["username"]}_mrsToken" : null
                     };
 
-                    Success.Handle200(req, resp, JsonSerializer.Serialize(responseData));
+                    await Success.Handle200(req, resp, JsonSerializer.Serialize(responseData));
                     return;
                 }
                 catch (JsonException ex)

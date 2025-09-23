@@ -22,20 +22,11 @@ namespace MRS
 
         private static readonly Dictionary<(string method, string path), RouteHandler> routes = new()
         {
-            { ("POST", "/api/v1/auth/login"), AuthService.handleAuthService },
             { ("GET", "/"), HandleHome },
-            { ("GET", "/test"), Test },
-        };
 
-        public static async Task Test(HttpListenerRequest req, HttpListenerResponse resp)
-        {
-            
-            byte[] data = System.Text.Encoding.UTF8.GetBytes("Test endpoint reached!");
-            resp.ContentType = "text/html";
-            resp.ContentEncoding = System.Text.Encoding.UTF8;
-            resp.ContentLength64 = data.LongLength;
-            await resp.OutputStream.WriteAsync(data);
-        }
+            { ("POST", "/api/v1/auth/login"), Login.HandleLogin },
+            { ("POST", "/api/v1/auth/register"), Register.handleRegister },
+        };
 
         public static async Task HandleHome(HttpListenerRequest req, HttpListenerResponse resp)
         {

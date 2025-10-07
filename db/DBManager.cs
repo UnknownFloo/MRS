@@ -8,7 +8,7 @@ namespace MRS.db
 {
     public class DBManager
     {
-        readonly MySqlConnection myConnection = new MySqlConnection("server=127.0.0.1;port=3306;uid=root;pwd=;database=mrs");
+        readonly MySqlConnection myConnection = new MySqlConnection("server=127.0.0.1;port=3306;uid=mrs_user;pwd=mrs_password;database=mrs");
 
         public MySqlDataReader Query(string sql, params string[] parameter)
         {

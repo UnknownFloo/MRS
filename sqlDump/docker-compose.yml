@@ -1,0 +1,24 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mrs_mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: mrs
+      MYSQL_USER: mrs_user
+      MYSQL_PASSWORD: mrs_password
+    volumes:
+      - ./mrs.sql:/docker-entrypoint-initdb.d/mrs.sql
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mrs_network
+
+networks:
+  mrs_network:
+    driver: bridge
+    
+volumes:
+  mysql_data:

@@ -24,8 +24,10 @@ namespace MRS
         {
             { ("GET", "/"), HandleHome },
 
-            { ("POST", "/api/v1/auth/login"), Login.HandleLogin },
-            { ("POST", "/api/v1/auth/register"), Register.handleRegister },
+            { ("POST", "/api/auth/login"), Login.HandleLogin },
+            { ("POST", "/api/auth/register"), Register.handleRegister },
+
+            { ("GET", "/api/leaderboard"), Leaderboard.Leaderboard.HandleLeaderboard },
         };
 
         public static async Task HandleHome(HttpListenerRequest req, HttpListenerResponse resp)

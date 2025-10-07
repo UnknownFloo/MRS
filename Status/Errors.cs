@@ -14,6 +14,16 @@ namespace MRS.Status
             await resp.OutputStream.WriteAsync(data);
         }
 
+        public static async Task Handle401(HttpListenerRequest req, HttpListenerResponse resp, string message)
+        {
+            resp.StatusCode = 401;
+            resp.ContentType = "text/html";
+            resp.ContentEncoding = System.Text.Encoding.UTF8;
+            byte[] data = System.Text.Encoding.UTF8.GetBytes($"<html><body><h1>401 Unauthorized</h1><p>{message}</p></body></html>");
+            resp.ContentLength64 = data.LongLength;
+            await resp.OutputStream.WriteAsync(data);
+        }
+
         public static async Task Handle500(HttpListenerRequest req, HttpListenerResponse resp, string error)
         {
             resp.StatusCode = 500;
